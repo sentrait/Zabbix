@@ -1,0 +1,835 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 0835b2a34e4a43d6887f5887b0135acc
+      name: 'Templates/Servers Hardware'
+  templates:
+    - uuid: 6c2534a531744910938a4d2b573600b7
+      template: 'Lenovo XCC SNMPv3'
+      name: 'Lenovo XCC SNMPv3 (Corregido)'
+      description: |
+        Template is used for Lenovo XCC monitor, modified by VijayK.
+        CORREGIDO v3 para ser compatible con el volcado de OID específico del servidor. Cambios principales en el descubrimiento de discos físicos y el preprocesamiento de temperatura/voltaje. Se corrigió error de importación (heartbeat como entero).
+        
+        GitHub: https://github.com/VSKUMBHANI/
+        
+        It required Linux by SNMP template before importing this template.
+      vendor:
+        name: 'https://github.com/vskumbhani'
+        version: 7.0-7
+      groups:
+        - name: 'Templates/Servers Hardware'
+      items:
+        - uuid: 96a2c78c5bfa47bf8a7ea239791832ff
+          name: 'Power Status'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.5.1.1.0
+          key: currentSysPowerStatus
+          history: 2d
+          trends: 5d
+          valuemap:
+            name: currentSysPowerStatus
+        - uuid: 96f8b1c175ef46ceb4e6ff67b5e86280
+          name: 'Fan Total Installed'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.3.1.0
+          key: fan.total
+          history: 2d
+          trends: 5d
+        - uuid: cb1d5e9f271e4fca9eae3e0f1ed5e0d7
+          name: 'Current System PowerStatus'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.5.1.1.0
+          key: IMMcurrentSysPowerStatus
+          delay: '300'
+          history: 2d
+          trends: 5d
+          valuemap:
+            name: 'IMM-MIB::systemHealthStat'
+        - uuid: 882191ec797a4c0da8db242a5120cb35
+          name: 'Machine Model'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.2.0
+          key: machinemodel
+          delay: 1h
+          history: 2d
+          value_type: 'TEXT'
+          trends: '0'
+          tags:
+            - tag: Application
+              value: hardware
+        - uuid: e65f9b45f79c424182111c6532a9f792
+          name: 'Machine Name'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.5.0
+          key: machinename
+          delay: 1h
+          history: 2d
+          value_type: 'TEXT'
+          trends: '0'
+          tags:
+            - tag: Application
+              value: hardware
+        - uuid: 8ea7d8ba65294108b6ac794ca2d370b5
+          name: 'Machine Serial Number'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.3.0
+          key: machinesrno
+          delay: 1h
+          history: 2d
+          value_type: 'TEXT'
+          trends: '0'
+          tags:
+            - tag: Application
+              value: hardware
+        - uuid: 2a166c480a8044619342c3fe0f499ee6
+          name: 'Machine Type'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.1.0
+          key: machinetype
+          delay: 1h
+          history: 2d
+          value_type: 'TEXT'
+          trends: '0'
+          tags:
+            - tag: Application
+              value: hardware
+        - uuid: 95c5aca17fa940ffa1fc09155d2e798b
+          name: 'Total power in use'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.10.1.7.0
+          key: power.inuse
+          delay: 120s
+          history: 7d
+          units: W
+        - uuid: 030a29b2e3ce45cdb14d565f13dcbecc
+          name: 'Power On Hours'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.5.1.2.0
+          key: powerOnHours
+          history: 2d
+          trends: 5d
+          units: uptime
+        - uuid: 3214bd7f52304db9b94b84aded713326
+          name: 'RAID OOB Capable'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.13.1.1.0
+          key: raidoobcapable
+          history: 2d
+          trends: 5d
+          description: 'If raidOOBCapable is disabled, all the RAID information is not available.'
+          valuemap:
+            name: raidoobcapable
+        - uuid: a6c62ffc8426473aa97e4e5a99d8e43d
+          name: Trap
+          type: SNMP_TRAP
+          key: 'snmptrap["General"]'
+          delay: '0'
+          history: 90d
+          value_type: 'LOG'
+          trends: '0'
+          logtimefmt: 'hh:mm:ss yyyy/MM/dd'
+          tags:
+            - tag: Application
+              value: Status
+        - uuid: 32b09c0aa022465ba5d5355fbbf6830c
+          name: 'Restart Count'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.5.1.3.0
+          key: XCCrestartCount
+          history: 2d
+          trends: 5d
+        - uuid: e5a1f6a1d4714f24813589b251a87e5b
+          name: 'ICMP Ping'
+          type: SIMPLE
+          key: icmpping
+          delay: 1m
+          history: 7d
+          trends: 365d
+          value_type: 'NUMERIC_UNSIGNED'
+          tags:
+            - tag: Application
+              value: Availability
+        - uuid: c63d81b49f3f458d975a5e37f6d4d420
+          name: 'SNMP Agent Ping'
+          type: SNMP_AGENT
+          key: snmp.ping
+          delay: 1m
+          history: 7d
+          trends: 365d
+          value_type: 'NUMERIC_UNSIGNED'
+          valuemap:
+            name: 'Zabbix agent availability'
+          tags:
+            - tag: Application
+              value: Availability
+      discovery_rules:
+        - uuid: 30f0d0edd5c140e4ab45946b5c5f21d3
+          name: 'Fan Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FANINDEX},1.3.6.1.4.1.19046.11.1.1.3.2.1.1]'
+          key: fan.discovery
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: 2375665078824f76893597040f4cbf5e
+              name: 'Fan {#FANINDEX} Health'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.3.2.1.10.{#FANINDEX}'
+              key: 'fanhealth[{#FANINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              description: 'A description of the fan component status.'
+              tags:
+                - tag: hardware
+                  value: fan
+                - tag: hardware
+                  value: health
+              trigger_prototypes:
+                - uuid: 71fa15912c30459f8f2e1aaedd687484
+                  expression: 'find(/Lenovo XCC SNMPv3/fanhealth[{#FANINDEX}],,,"Normal")=0'
+                  name: 'Fan {#FANINDEX} Health'
+                  priority: WARNING
+                  manual_close: 'YES'
+            - uuid: d4d558c7ed154ef0bf901d0667591265
+              name: 'Fan {#FANINDEX} Speed in percentage'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.3.2.1.3.{#FANINDEX}'
+              key: 'fanspeed[{#FANINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              description: 'Fan  speed expressed in percent(%) of maximum RPM. An octet string expressed as ''ddd% of maximum'' where: d is a decimal digit or blank space for a leading zero. If the fan is determined not to be running or the fan speed cannot be determined, the string will indicate ''Offline''.'
+              tags:
+                - tag: hardware
+                  value: fan
+            - uuid: f222488596af4f86bb241c916c7c362b
+              name: 'Fan {#FANINDEX} Description'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.3.2.1.2.{#FANINDEX}'
+              key: 'fan[{#FANINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: hardware
+                  value: fan
+        - uuid: 0110f8bba9dd4ed382326a2bbce101a2
+          name: 'Firmware Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FIRMINDEX},1.3.6.1.4.1.19046.11.1.1.5.1.1.1,{#FIRMTYPE},1.3.6.1.4.1.19046.11.1.1.5.1.1.2]'
+          key: firmwarediscovery
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: d2791b4937754f75be0ff0a7b48e64b2
+              name: 'Release Date: {#FIRMTYPE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.1.1.4.{#FIRMINDEX}'
+              key: 'reldate[{#FIRMINDEX}]'
+              history: 90d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: Application
+                  value: Firmware
+            - uuid: 7b8bea07b1ae47bd9fd275cedd94a2dd
+              name: 'Version: {#FIRMTYPE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.1.1.3.{#FIRMINDEX}'
+              key: 'version[{#FIRMINDEX}]'
+              history: 90d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: Application
+                  value: Firmware
+        - uuid: d6811a3b06304ff78fe7c2caaa847439
+          name: 'LED Status Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#LEDINDEX},1.3.6.1.4.1.19046.11.1.1.8.2.1.1,{#LEDLABEL},1.3.6.1.4.1.19046.11.1.1.8.2.1.4]'
+          key: leddiscovery
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: 9ac40e37696844e89f93080eaed61c58
+              name: 'LED Color: {#LEDLABEL}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.8.2.1.6.{#LEDINDEX}'
+              key: 'ledcolor[{#LEDINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: 8816bdbd845f4d2ebd336ea61918374a
+              name: 'LED State: {#LEDLABEL}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.8.2.1.5.{#LEDINDEX}'
+              key: 'ledstate[{#LEDINDEX}]'
+              history: 2d
+              trends: 5d
+              valuemap:
+                name: ledstate
+        - uuid: bf3327737d6845d6b40061fe667330c2
+          name: 'Memory module Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#MEMINDEX},1.3.6.1.4.1.19046.11.1.1.5.21.1.1,{#MEMDISC},1.3.6.1.4.1.19046.11.1.1.5.21.1.2,{#MEMTYPE},1.3.6.1.4.1.19046.11.1.1.5.21.1.6]'
+          key: memorydiscovery
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: f7e30266c79041bca2f2a2979146fd71
+              name: '{#MEMDISC} ({#MEMTYPE}) PartNumber'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.11.{#MEMINDEX}'
+              key: 'mempartno[{#MEMINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: b5089d94c83e4a21a594fc106ffcf136
+              name: '{#MEMDISC} ({#MEMTYPE}) Serial'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.4.{#MEMINDEX}'
+              key: 'memserial[{#MEMINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: ed004f1dd8584171843d763cd54ad4db
+              name: '{#MEMDISC} ({#MEMTYPE}) Size(GB)'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.7.{#MEMINDEX}'
+              key: 'memsize[{#MEMINDEX}]'
+              history: 2d
+              trends: 5d
+              units: '!GB'
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: 49f837e86c4c49e697fe58de16426ad2
+              name: '{#MEMDISC} ({#MEMTYPE}) Speed(MHz)'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.9.{#MEMINDEX}'
+              key: 'memspeed[{#MEMINDEX}]'
+              history: 2d
+              trends: 5d
+              units: '!MHz'
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: a7864055468d4baf93ed5f6eab65ec38
+              name: '{#MEMDISC} ({#MEMTYPE}) Status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.8.{#MEMINDEX}'
+              key: 'memstatus[{#MEMINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: hardware
+                  value: memory
+              trigger_prototypes:
+                - uuid: dd5e936e770b4dd39a45374c031a7161
+                  expression: 'find(/Lenovo XCC SNMPv3/memstatus[{#MEMINDEX}],,,"Normal")=0'
+                  name: '{#MEMDISC} ({#MEMTYPE}) Status'
+                  priority: WARNING
+                  manual_close: 'YES'
+        - uuid: 08fb31caf1304c2dac559dfb1c992d43
+          name: 'Network card Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#NETINDEX},1.3.6.1.4.1.19046.11.1.1.14.4.1.1,{#NETNAME},1.3.6.1.4.1.19046.11.1.1.14.4.1.2]'
+          key: network.card
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          description: 'Discover Ethernet cards.'
+          item_prototypes:
+            - uuid: 8c34cd0f2aaa4ef2ab039f6dcde9e5bb
+              name: 'Network Adapter Link speed: {#NETNAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.14.4.1.21.{#NETINDEX}'
+              key: 'adapterlinkspeed[{#NETINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: type
+                  value: network
+                - tag: type
+                  value: status
+            - uuid: f50c8381245e412eb824d96ce4348a5f
+              name: 'Network Adapter Link status: {#NETNAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.14.4.1.20.{#NETINDEX}'
+              key: 'adapterlinkstatus[{#NETINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: type
+                  value: network
+                - tag: type
+                  value: status
+            - uuid: 718837c4b54a4335833f2f0a7799eb24
+              name: 'Network Adapter: {#NETNAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.14.4.1.4.{#NETINDEX}'
+              key: 'adapterstatus[{#NETINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: type
+                  value: network
+        - uuid: 3300f20e38104a9a989a16effb15b0bd
+          name: 'Physical Disk Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#DISKNAME},.1.3.6.1.4.1.19046.11.1.1.13.1.3.1.2]'
+          key: physicalDisk.discovery
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          description: 'LENOVO-XCC-MIB:diskName. Descubre discos desde la tabla de controladora RAID para mayor consistencia.'
+          item_prototypes:
+            - uuid: b2c76cdedadb4f56b83e91c31c72ca07
+              name: '{#DISKNAME}: Physical disk part number'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.19046.11.1.1.13.1.3.1.19.{#SNMPINDEX}'
+              key: 'system.hw.physicaldisk.part_number[{#SNMPINDEX}]'
+              delay: 1h
+              history: 2w
+              value_type: 'TEXT'
+              trends: '0'
+              description: |
+                LENOVO-XCC-MIB
+                disk module FRU name.
+              tags:
+                - tag: Application
+                  value: 'Physical Disks'
+            - uuid: aad0f4499f12497da1b05b440b99032a
+              name: '{#DISKNAME}: Physical disk status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.3.1.4.{#SNMPINDEX}'
+              key: 'system.hw.physicaldisk.status[{#SNMPINDEX}]'
+              delay: 3m
+              history: 30d
+              value_type: 'TEXT'
+              trends: '0'
+              description: |
+                LENOVO-XCC-MIB
+                A description of the disk module status from the RAID controller table.
+              tags:
+                - tag: Application
+                  value: 'Physical Disks'
+              trigger_prototypes:
+                - uuid: b2badf0287984d518f247796a6ace445
+                  expression: 'count(/Lenovo XCC SNMPv3/system.hw.physicaldisk.status[{#SNMPINDEX}],#1,"ne","{$DISK_OK_STATUS}")=1'
+                  name: '{#DISKNAME}: Physical disk is not in OK state'
+                  priority: WARNING
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    Please check physical disk for warnings or errors
+                  manual_close: 'YES'
+        - uuid: 1b927fceba8d4bbeab9b5438c2a8a4a8
+          name: 'Processor Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#CPUINDEX},1.3.6.1.4.1.19046.11.1.1.5.20.1.1,{#CPUMODEL},1.3.6.1.4.1.19046.11.1.1.5.20.1.12]'
+          key: processor.discovery
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: 1bf88e5b05b74b67b394a7102b68df8f
+              name: 'CPU Core:{#CPUINDEX} {#CPUMODEL}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.20.1.7.{#CPUINDEX}'
+              key: 'cpucore[{#CPUINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: hardware
+                  value: processor
+            - uuid: a2bda2996f984766b25c718529692def
+              name: 'CPU:{#CPUINDEX} {#CPUMODEL}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.20.1.11.{#CPUINDEX}'
+              key: 'cpustatus[{#CPUINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              tags:
+                - tag: hardware
+                  value: processor
+        - uuid: 2f248e19f10346a2825e108ee0918bc0
+          name: 'PSU Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#PSU_DESCR},.1.3.6.1.4.1.19046.11.1.1.11.2.1.2]'
+          key: psu.discovery
+          delay: 1h
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          description: 'LENOVO-XCC-MIB::powerFruName'
+          item_prototypes:
+            - uuid: d5b151ff652b4015a798611d25386fc2
+              name: '{#PSU_DESCR}: Power supply status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.11.2.1.6.{#SNMPINDEX}'
+              key: 'sensor.psu.status[powerHealthStatus.{#SNMPINDEX}]'
+              delay: 3m
+              history: 2w
+              value_type: 'TEXT'
+              trends: '0'
+              description: |
+                LENOVO-XCC-MIB
+                A description of the power module status.
+              tags:
+                - tag: Application
+                  value: 'Power Supply'
+              trigger_prototypes:
+                - uuid: a784bdeb29614d33aeaf82d79ba2ac47
+                  expression: 'count(/Lenovo XCC SNMPv3/sensor.psu.status[powerHealthStatus.{#SNMPINDEX}],#1,"ne","{$PSU_OK_STATUS}")=1'
+                  name: '{#PSU_DESCR}: Power supply is not in normal state'
+                  priority: INFO
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    Please check the power supply unit for errors
+        - uuid: 62766f16144246e0b6888bddb89b1360
+          name: 'RAID Controller discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#IFNAME},1.3.6.1.4.1.19046.11.1.1.13.1.2.1.2,{#IFVERSION},1.3.6.1.4.1.19046.11.1.1.13.1.2.1.4]'
+          key: raidcontroller
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: a42584c7cb4c44719ab2cdc99b7f95ac
+              name: 'RAID controller battery backup - {#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.2.1.5.{#SNMPINDEX}'
+              key: 'raidctrlbatbck[{#SNMPINDEX}]'
+              history: 2d
+              trends: 5d
+              valuemap:
+                name: 'raid ctrl batbck'
+            - uuid: 0f0229505b714d34839e935b15aa1901
+              name: 'RAID controller name - {#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.2.1.2.{#SNMPINDEX}'
+              key: 'raidctrlname[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: d6fa73c627174f92b3d1c57c22a1ee20
+              name: 'RAID controller version - {#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.2.1.4.{#SNMPINDEX}'
+              key: 'raidctrlver[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: a782f3f5184d491a8018b3a9e4f94e53
+              name: 'RAID controller Model - {#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.2.1.9.{#SNMPINDEX}'
+              key: 'raidctrlvpdmodel[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: e2647b4f3ff34e2aa6c9c520a89be2e6
+              name: 'RAID controller Part Number - {#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.2.1.12.{#SNMPINDEX}'
+              key: 'raidctrlvpdpartno[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: bc325159f8c345249c97542c9de9c887
+              name: 'RAID controller Serial Number - {#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.2.1.10.{#SNMPINDEX}'
+              key: 'raidctrlvpdsrnum[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: 60c270b2bcbe4ec2aacf3720d9bf6282
+              name: 'RAID controller FRU - {#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.2.1.11.{#SNMPINDEX}'
+              key: 'raidctrlvpfru[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+        - uuid: 3a540c022e1649c7abc324e400559a87
+          name: 'Storage Pool Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#IFNAME},1.3.6.1.4.1.19046.11.1.1.13.1.6.1.2]'
+          key: raidstoragepool
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: 42cf074239d84336a259a8cae1495f96
+              name: 'Storage Pool {#SNMPINDEX} Capacity'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.6.1.5.{#SNMPINDEX}'
+              key: 'raidstoragepoolcapacity[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: 55340e00945047aca67659b2c9c202da
+              name: 'Storage Pool Controller {#SNMPINDEX} Name'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.6.1.3.{#SNMPINDEX}'
+              key: 'raidstoragepoolcntrl[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              description: 'The name of a particular RAID storagepool.'
+              tags:
+                - tag: hardware
+                  value: storage
+            - uuid: 6259b48493da47eaa54f8691edaa1f89
+              name: 'Storage Pool {#SNMPINDEX} Drives'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.6.1.7.{#SNMPINDEX}'
+              key: 'raidstoragepooldrives[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              description: 'The physical drives list of a particular RAID storagepool.'
+            - uuid: 423e90da7ce446cbae1af2e457e3cb84
+              name: 'Storage Pool {#SNMPINDEX} Stat'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.6.1.4.{#SNMPINDEX}'
+              key: 'raidstoragepoolstat[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+            - uuid: f1bbe901c2e540d1ad049c86375265cf
+              name: 'Storage Pool {#SNMPINDEX} VolumeList'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.6.1.6.{#SNMPINDEX}'
+              key: 'raidstoragepoolvollist[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              description: 'The volumes list of a particular RAID storagepool.'
+            - uuid: 00f4b532f0dd4d078a333170d1c98028
+              name: 'Storage Pool {#SNMPINDEX} Name'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.13.1.6.1.2.{#SNMPINDEX}'
+              key: 'raidstoragepool[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'TEXT'
+              trends: '0'
+              description: 'The name of a particular RAID storagepool.'
+        - uuid: 469742e13fb64490bb64fe9b1bdfdd37
+          name: 'Temperature Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.19046.11.1.1.1.2.1.2]'
+          key: tempDescr.discovery
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '{$NAME.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: A
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          description: 'LENOVO-XCC-MIB::tempDescr'
+          item_prototypes:
+            - uuid: 313e901d27ee4c468bc06a927abf7061
+              name: '{#SNMPVALUE}: Temperature'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.1.2.1.3.{#SNMPINDEX}'
+              key: 'sensor.temp.value[{#SNMPINDEX}]'
+              history: 2d
+              value_type: 'FLOAT'
+              trends: 5d
+              units: °C
+              description: |
+                LENOVO-XCC-MIB
+                The measured temperature.
+              tags:
+                - tag: Application
+                  value: Temperature
+              trigger_prototypes:
+                - uuid: 0a47aac3fc3b413f9c8fbc5ac09acab2
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
+                  name: '{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}'
+                  priority: HIGH
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    This trigger uses temperature sensor values as well as temperature sensor status if available
+                - uuid: e13c714f6770449e81f4cfa4c9836471
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_WARN:""}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'max(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_WARN:""}-3'
+                  name: '{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}'
+                  priority: WARNING
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    This trigger uses temperature sensor values as well as temperature sensor status if available
+                  dependencies:
+                    - name: '{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}'
+                      expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
+                      recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
+                - uuid: 113f842de55f447d92b736d3fdbef011
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:""}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:""}+3'
+                  name: '{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}'
+                  priority: AVERAGE
+                  description: 'Last value: {ITEM.LASTVALUE1}.'
+        - uuid: f00f2f508dcd4aeb833d5ab00138675c
+          name: 'Voltage Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#VOLTDESCR},1.3.6.1.4.1.19046.11.1.1.2.2.1.2]'
+          key: voltDescr.discovery
+          delay: 1h
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          description: 'LENOVO-XCC-MIB::voltDescr'
+          item_prototypes:
+            - uuid: 36b62b1edf214931b136d8593ed61d80
+              name: '{#VOLTDESCR}: Status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.2.2.1.11.{#SNMPINDEX}'
+              key: 'voltage.status[{#SNMPINDEX}]'
+              delay: 3m
+              history: 2w
+              value_type: 'TEXT'
+              trends: '0'
+              description: |
+                LENOVO-XCC-MIB
+                A description of the voltage component status.
+              tags:
+                - tag: Application
+                  value: Voltage
+              trigger_prototypes:
+                - uuid: ac793d10c4324bc0837ed78eaec74d92
+                  expression: 'find(/Lenovo XCC SNMPv3/voltage.status[{#SNMPINDEX}],#2,"like","Normal")=0'
+                  name: '{#VOLTDESCR}: voltage is not in normal state'
+                  priority: WARNING
+                  description: 'Last value: {ITEM.LASTVALUE1}.'
+                  manual_close: 'YES'
+            - uuid: dd41cefe17b3423da376f1c9cda361bd
+              name: '{#VOLTDESCR}: Voltage'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.2.2.1.3.{#SNMPINDEX}'
+              key: 'voltage[{#SNMPINDEX}]'
+              delay: 3m
+              history: 2w
+              value_type: 'FLOAT'
+              units: V
+              description: |
+                LENOVO-XCC-MIB
+                The measured voltage.
+              tags:
+                - tag: Application
+                  value: Voltage
+      macros:
+        - macro: '{$DISK_OK_STATUS}'
+          value: Online
+        - macro: '{$FAN_OK_STATUS}'
+          value: Normal
+        - macro: '{$HEALTH_CRIT_STATUS}'
+          value: '2'
+        - macro: '{$HEALTH_DISASTER_STATUS}'
+          value: '0'
+        - macro: '{$HEALTH_WARN_STATUS}'
+          value: '4'
+        - macro: '{$NAME.NOT_MATCHES}'
+          value: DTS
+        - macro: '{$PSU_OK_STATUS}'
+          value: Normal
+        - macro: '{$TEMP_CRIT}'
+          value: '85'
+        - macro: '{$TEMP_CRIT:"Ambient"}'
+          value: '40'
+        - macro: '{$TEMP_CRIT_LOW}'
+          value: '5'
+        - macro: '{$TEMP_WARN}'
+          value: '75'
+        - macro: '{$TEMP_WARN:"Ambient"}'
+          value: '35'
+      valuemaps:
+        - uuid: 2224f3bc19c34e1f9a8e63bc58938123
+          name: currentSysPowerStatus
+          mappings:
+            - value: '0'
+              newvalue: poweredOff
+            - value: '1'
+              newvalue: sleepS3
+            - value: '255'
+              newvalue: poweredOn
+        - uuid: 6e1a86cbdafc4b5499b4e748afc078b7
+          name: 'IMM-MIB::systemHealthStat'
+          mappings:
+            - value: '0'
+              newvalue: nonRecoverable
+            - value: '2'
+              newvalue: critical
+            - value: '4'
+              newvalue: nonCritical
+            - value: '255'
+              newvalue: normal
+        - uuid: 77a1891a047d4033a2456fc0412df21b
+          name: ledstate
+          mappings:
+            - value: '0'
+              newvalue: 'off'
+            - value: '1'
+              newvalue: 'on'
+            - value: '2'
+              newvalue: blinking
+        - uuid: 027b1e13375d4fa486fa3dc89b8dc2a1
+          name: 'raid ctrl batbck'
+          mappings:
+            - value: '0'
+              newvalue: uninstalled
+            - value: '1'
+              newvalue: installed
+            - value: '2'
+              newvalue: unknown
+        - uuid: 5575d7f999004fe385931f5a759b16c2
+          name: raidoobcapable
+          mappings:
+            - value: '0'
+              newvalue: disabled
+            - value: '1'
+              newvalue: enabled
+        - uuid: a33ac68ed7964dc0af0656758418c98b
+          name: systemState
+          mappings:
+            - value: '0'
+              newvalue: systemPowerOfforStateUnknown
+            - value: '1'
+              newvalue: systemPowerOnorStartingUEFI
+            - value: '2'
+              newvalue: systemInUEFI
+            - value: '3'
+              newvalue: uEFIErrorDetected
+            - value: '4'
+              newvalue: bootingOSorInUnsupportedOS
+            - value: '5'
+              newvalue: oSBooted
+            - value: '6'
+              newvalue: suspendToRAM
+            - value: '7'
+              newvalue: systemInSetup
+            - value: '8'
+              newvalue: systemInLXPMMaintenanceMode
+            - value: '9'
+              newvalue: systemInMemoryTest
+        - uuid: b4295e26c63d4107b34b68e91624c9c8
+          name: 'Zabbix agent availability'
+          mappings:
+            - value: '0'
+              newvalue: 'Not available'
+            - value: '1'
+              newvalue: 'Available'
