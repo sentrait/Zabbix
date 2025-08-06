@@ -8,14 +8,14 @@ zabbix_export:
       template: 'Lenovo XCC SNMPv3'
       name: 'Lenovo XCC SNMPv3 (Corregido)'
       description: |
-        Template is used for Lenovo XCC monitor, modified by VijayK.
+        Template is used for Lenovo XCC monitor, modified by Sentra IT.
         CORREGIDO v3 para ser compatible con el volcado de OID específico del servidor. Cambios principales en el descubrimiento de discos físicos y el preprocesamiento de temperatura/voltaje. Se corrigió error de importación (heartbeat como entero).
         
-        GitHub: https://github.com/VSKUMBHANI/
+        GitHub: https://github.com/sentrait/Zabbix/
         
         It required Linux by SNMP template before importing this template.
       vendor:
-        name: 'https://github.com/vskumbhani'
+        name: 'https://github.com/sentrait'
         version: 7.0-7
       groups:
         - name: 'Templates/Servers Hardware'
