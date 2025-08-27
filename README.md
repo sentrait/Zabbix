@@ -12,6 +12,9 @@ El objetivo es centralizar y compartir configuraciones que permitan a administra
 ## 🎯 Objetivo
 Facilitar la adopción de **buenas prácticas de monitoreo en Zabbix**, reduciendo tiempos de configuración y asegurando que la infraestructura esté supervisada de forma proactiva.
 
+## 🔗 Enlaces útiles
+- 📂 [Plantillas Zabbix](https://github.com/sentrait/Zabbix/tree/main/Templates)
+
 ## 🤝 Contribuciones
 Este repositorio está abierto a mejoras:  
 - Correcciones en plantillas.  
